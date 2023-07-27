@@ -1,14 +1,14 @@
 import requests
-import os
 import time
 import mimetypes
 import signal
 import concurrent.futures
 
-MAX_RETRIES = 5
-MAX_WORKERS = 32
-SLEEP_TIME = 10  # 5 minutes in seconds
-TASK_THRESHOLD = 64
+MAX_RETRIES = 16
+MAX_WORKERS = 256
+SLEEP_TIME = 60  # 5 minutes in seconds
+TASK_THRESHOLD = 512
+FILENAME_EXTENSION = "png"
 
 skipped_urls = []
 
@@ -23,7 +23,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 def downloadFile(params):
     num1, num2 = params
-    url = f"https://pixiv.re/{num1}.png" if num2 == 0 else f"https://pixiv.re/{num1}-{num2}.png"
+    url = f"https://pixiv.re/{num1}.{FILENAME_EXTENSION}" if num2 == 0 else f"https://pixiv.re/{num1}-{num2}.{FILENAME_EXTENSION}"
 
     retries = 0
     while retries < MAX_RETRIES:
@@ -78,11 +78,11 @@ while True:
 
     params = []
 
-    url = f"https://pixiv.re/{i}.png"
+    url = f"https://pixiv.re/{i}.{FILENAME_EXTENSION}"
     response = requests.get(url)
 
-    if response.status_code != 404 and response.history and "Location" in response.history[0].headers and f"{i}-1.png" in response.history[0].headers["Location"]:
-        for j in range(1, 127):
+    if response.status_code != 404 and response.history and "Location" in response.history[0].headers and f"{i}-1.{FILENAME_EXTENSION}" in response.history[0].headers["Location"]:
+        for j in range(1, 128):
             params.append((i, j))
     else:
         params.append((i, 0))
@@ -98,4 +98,3 @@ while True:
         time.sleep(SLEEP_TIME)
         print(f"Woken up!")
         task_counter = 0
-
