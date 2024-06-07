@@ -9,12 +9,10 @@ on:
       start:
         description: 'num to start'
         required: true
-        default: '1'
         type: string
       end:
         description: 'num to end'
         required: true
-        default: '-1'
         type: string
 
 permissions:

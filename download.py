@@ -6,6 +6,8 @@ import concurrent.futures
 import sys
 import os
 
+addr : str = "https://pixiv.cat"
+
 MAX_RETRIES = 16
 MAX_WORKERS = 256
 FILENAME_EXTENSION = "png"
@@ -28,7 +30,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 def downloadFile(params):
     num1, num2 = params
-    url = f"https://pixiv.re/{num1}.{FILENAME_EXTENSION}" if num2 == 0 else f"https://pixiv.re/{num1}-{num2}.{FILENAME_EXTENSION}"
+    url = f"{addr}/{num1}.{FILENAME_EXTENSION}" if num2 == 0 else f"{addr}/{num1}-{num2}.{FILENAME_EXTENSION}"
 
     retries = 0
     while retries < MAX_RETRIES:
@@ -83,7 +85,7 @@ while True:
 
     params = []
 
-    url = f"https://pixiv.re/{i}.{FILENAME_EXTENSION}"
+    url = f"{addr}/{i}.{FILENAME_EXTENSION}"
     response = requests.get(url)
 
     if response.status_code != 404 and response.history and "Location" in response.history[0].headers and f"{i}-1.{FILENAME_EXTENSION}" in response.history[0].headers["Location"]:
