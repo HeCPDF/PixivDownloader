@@ -10,7 +10,10 @@ MAX_RETRIES = 16
 MAX_WORKERS = 256
 FILENAME_EXTENSION = "png"
 
-os.mkdir('downloaded')
+try:
+    os.mkdir('downloaded')
+except FileExistsError:
+    pass
 
 skipped_urls = []
 
@@ -67,9 +70,9 @@ def downloadFile(params):
         else:
             print(f"{num1}-{num2} saved")
 
-start = sys.argv[1]
-end = sys.argv[2]
-
+start = int(sys.argv[1])
+end = int(sys.argv[2])
+print(start,end)
 i = start
 task_counter = 0
 
