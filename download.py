@@ -3,12 +3,14 @@ import time
 import mimetypes
 import signal
 import concurrent.futures
+import sys
+import os
 
 MAX_RETRIES = 16
 MAX_WORKERS = 256
-SLEEP_TIME = 60  # 5 minutes in seconds
-TASK_THRESHOLD = 512
 FILENAME_EXTENSION = "png"
+
+os.mkdir('downloaded')
 
 skipped_urls = []
 
@@ -58,15 +60,15 @@ def downloadFile(params):
     else:
         filename = f"{num1}" if num2 == 0 else f"{num1}-{num2}"
         ext = mimetypes.guess_extension(response.headers['content-type'])
-        with open(filename + ext, 'wb') as f:
+        with open('downloaded/' + filename + ext, 'wb') as f:
             f.write(response.content)
         if num2 == 0:
             print(f"{num1} saved")
         else:
             print(f"{num1}-{num2} saved")
 
-start = int(input("Enter the starting number: "))
-end = int(input("Enter the ending number (or -1 for infinite): "))
+start = sys.argv[1]
+end = sys.argv[2]
 
 i = start
 task_counter = 0
@@ -92,9 +94,3 @@ while True:
     
     i += 1
     task_counter += len(params)
-    
-    if task_counter >= TASK_THRESHOLD:
-        print(f"Completed {task_counter} tasks, sleeping for {SLEEP_TIME / 60} minutes.")
-        time.sleep(SLEEP_TIME)
-        print(f"Woken up!")
-        task_counter = 0
