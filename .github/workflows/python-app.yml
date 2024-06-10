@@ -43,5 +43,5 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: downloaded_files
-        path: ./* # or path/to/artifact
+        path: . # or path/to/artifact
         compression-level: 9 
