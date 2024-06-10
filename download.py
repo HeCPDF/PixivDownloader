@@ -9,7 +9,7 @@ import os
 addr : str = "https://pixiv.cat"
 
 MAX_RETRIES = 16
-MAX_WORKERS = 256
+MAX_WORKERS = 32
 FILENAME_EXTENSION = "png"
 
 try:
